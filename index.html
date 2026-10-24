@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SharpCut – Men’s Salon Booking</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#d8dde5;--red:#c8102e;--blue:#1d3c78;--ok:#1a7f4b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1424;--card:#16203a;--ink:#eef1f6;--mute:#9aa6bd;--line:#2a3857;--red:#ff4d63;--blue:#7fa2ff;--ok:#4cd68c}}
+:root[data-theme="dark"]{--bg:#0d1424;--card:#16203a;--ink:#eef1f6;--mute:#9aa6bd;--line:#2a3857;--red:#ff4d63;--blue:#7fa2ff;--ok:#4cd68c}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,sans-serif}
+body{max-width:480px;margin:0 auto;padding-bottom:76px;min-height:100vh}
+h1,h2,h3{font-family:'Archivo Narrow',system-ui,sans-serif;margin:0}
+header{background:var(--ink);color:#fff;padding:16px 16px 14px;position:relative}
+header:after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:repeating-linear-gradient(-45deg,#c8102e 0 10px,#fff 10px 20px,#1d3c78 20px 30px)}
+header h1{font-size:26px}header p{margin:2px 0 0;opacity:.8;font-size:14px}
+.pad{padding:14px 16px}
+.banner{background:var(--red);color:#fff;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-weight:600}
+.banner small{display:block;font-weight:400;opacity:.9}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;margin-bottom:10px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px}
+.chip{flex:none;padding:7px 14px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--ink);font:inherit;font-size:14px}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.item{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+.ico{width:44px;height:44px;border-radius:8px;background:var(--bg);display:grid;place-items:center;font-size:24px;flex:none}
+.item .t{flex:1}.item b{display:block}.item span{color:var(--mute);font-size:13px}
+.price{font-weight:700;white-space:nowrap}
+.btn{border:0;border-radius:8px;padding:11px 16px;font:inherit;font-weight:600;background:var(--red);color:#fff;width:100%}
+.btn.sm{width:auto;padding:7px 14px}.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.qty{display:flex;align-items:center;gap:10px}.qty button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:18px}
+.row{display:flex;justify-content:space-between;padding:5px 0}.row.tot{font-weight:700;font-size:18px;border-top:1px solid var(--line);margin-top:6px;padding-top:10px}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.slot{padding:9px 0;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;font-size:14px}
+.slot.on{background:var(--blue);color:#fff;border-color:var(--blue)}.slot:disabled{opacity:.35;text-decoration:line-through}
+.pay{display:flex;gap:8px;margin-bottom:10px}.pay label{flex:1;border:1px solid var(--line);border-radius:8px;padding:10px 4px;text-align:center;background:var(--card);font-size:14px}
+.pay input{display:none}.pay input:checked+span{font-weight:700;color:var(--red)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px}
+.steps{display:flex;margin:12px 0}.steps div{flex:1;text-align:center;font-size:12px;color:var(--mute)}
+.steps div:before{content:"";display:block;width:14px;height:14px;border-radius:50%;background:var(--line);margin:0 auto 4px}
+.steps .d{color:var(--ink);font-weight:600}.steps .d:before{background:var(--ok)}
+.stars button{font-size:30px;background:none;border:0;color:var(--line);padding:0 2px}.stars button.on{color:#f5a623}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;background:none;color:var(--mute);padding:9px 0 8px;font:inherit;font-size:12px;position:relative}
+nav button b{display:block;font-size:20px;font-weight:400}nav button.on{color:var(--red);font-weight:700}
+.badge{position:absolute;top:3px;left:55%;background:var(--red);color:#fff;border-radius:9px;font-size:11px;padding:0 6px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;z-index:9}
+h2{font-size:22px;margin-bottom:10px}a{color:var(--blue)}.mute{color:var(--mute);font-size:13px}
+.bar{height:10px;background:var(--red);border-radius:5px;margin-top:4px}
+</style></head><body>
+<header><h1>SharpCut</h1><p>Men’s salon · book a chair in 1 minute</p></header>
+<main id="app"></main>
+<nav id="nav"></nav>
+<script>
+const SERVICES=[
+{id:1,n:"Classic Haircut",c:"Hair",p:150,m:30,i:"✂️"},{id:2,n:"Skin Fade",c:"Hair",p:200,m:40,i:"💈"},
+{id:3,n:"Kids Haircut (under 12)",c:"Hair",p:100,m:25,i:"👦"},{id:4,n:"Beard Trim & Shape",c:"Beard",p:100,m:20,i:"🧔"},
+{id:5,n:"Clean Shave",c:"Beard",p:80,m:15,i:"🪒"},{id:6,n:"Haircut + Beard Combo",c:"Combo",p:220,m:50,i:"🔥"},
+{id:7,n:"Face Clean-up",c:"Skin",p:350,m:30,i:"🧴"},{id:8,n:"Head Massage",c:"Skin",p:120,m:15,i:"💆"},
+{id:9,n:"Groom Package",c:"Combo",p:999,m:120,i:"🤵"}];
+const BARBERS=["Any available","Arun","Vijay","Karthik"];
+const TIMES=["10:00","11:00","12:00","14:00","15:00","16:00","17:00","18:00","19:00"];
+const COUPONS={SHARP10:{t:"pct",v:10,d:"10% off"},FIRST50:{t:"flat",v:50,d:"₹50 off"}};
+const SHOP_PHONE="919876543210";
+let S={tab:"home",cat:"All",q:"",cart:{},coupon:null,user:null,orders:[],barber:0,date:"",slot:"",pay:"UPI",view:null,rate:0,last:null};
+function load(){try{const d=JSON.parse(localStorage.getItem("sharpcut")||"null");if(d){S.user=d.user;S.orders=d.orders||[]}}catch(e){}}
+function save(){try{localStorage.setItem("sharpcut",JSON.stringify({user:S.user,orders:S.orders}))}catch(e){}}
+const $=s=>document.querySelector(s);
+const inr=n=>"₹"+n;
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function go(t,v){S.tab=t;S.view=v||null;render();window.scrollTo(0,0)}
+function cartCount(){return Object.values(S.cart).reduce((a,b)=>a+b,0)}
+function totals(){let sub=0;for(const id in S.cart){sub+=SERVICES.find(s=>s.id==id).p*S.cart[id]}
+ let disc=0;if(S.coupon){const c=COUPONS[S.coupon];disc=c.t=="pct"?Math.round(sub*c.v/100):Math.min(c.v,sub)}
+ let red=0;if(S.redeem&&S.user){red=Math.min(S.user.pts||0,Math.floor((sub-disc)*0.3))}
+ return{sub,disc,red,tot:Math.max(sub-disc-red,0)}}
+function setQty(id,d){S.cart[id]=Math.max(0,(S.cart[id]||0)+d);if(!S.cart[id])delete S.cart[id];render()}
+function today(){return new Date().toISOString().slice(0,10)}
+function takenSlots(){return S.orders.filter(o=>o.date==S.date&&o.status!="Cancelled"&&(o.barber==S.barber||S.barber==0||o.barber==0)).map(o=>o.slot)}
+
+function home(){
+ const cats=["All","Hair","Beard","Skin","Combo"];
+ const list=SERVICES.filter(s=>(S.cat=="All"||s.c==S.cat)&&s.n.toLowerCase().includes(S.q.toLowerCase()));
+ return `<div class="pad"><div class="banner">Use code SHARP10 for 10% off<small>New here? FIRST50 gives ₹50 off your first booking.</small></div>
+ <input id="q" placeholder="Search services" value="${S.q}" oninput="S.q=this.value;render(true)">
+ <div class="chips">${cats.map(c=>`<button class="chip ${S.cat==c?"on":""}" onclick="S.cat='${c}';render()">${c}</button>`).join("")}</div>
+ ${list.length?list.map(s=>`<div class="item"><div class="ico">${s.i}</div><div class="t"><b>${s.n}</b><span>${s.m} min</span></div>
+ <div style="text-align:right"><div class="price">${inr(s.p)}</div>${S.cart[s.id]?`<div class="qty"><button onclick="setQty(${s.id},-1)">−</button>${S.cart[s.id]}<button onclick="setQty(${s.id},1)">+</button></div>`:`<button class="btn sm" onclick="setQty(${s.id},1)">Add</button>`}</div></div>`).join(""):`<p class="mute">No service matches “${S.q}”. Clear the search or pick another category.</p>`}
+ </div>`}
+
+function cart(){
+ if(!cartCount())return `<div class="pad"><h2>Your cart</h2><p class="mute">Nothing here yet. Add a service from Home to book it.</p><button class="btn" onclick="go('home')">Browse services</button></div>`;
+ const t=totals();
+ return `<div class="pad"><h2>Your cart</h2>
+ ${Object.keys(S.cart).map(id=>{const s=SERVICES.find(x=>x.id==id);return `<div class="item"><div class="ico">${s.i}</div><div class="t"><b>${s.n}</b><span>${inr(s.p)} each</span></div><div class="qty"><button onclick="setQty(${id},-1)">−</button>${S.cart[id]}<button onclick="setQty(${id},1)">+</button></div></div>`}).join("")}
+ <div style="display:flex;gap:8px"><input id="cp" placeholder="Coupon code" style="margin:0"><button class="btn sm" onclick="applyCoupon()">Apply</button></div>
+ ${S.coupon?`<p class="mute">${S.coupon} applied: ${COUPONS[S.coupon].d}</p>`:""}
+ <div class="card" style="margin-top:12px"><div class="row"><span>Subtotal</span><span>${inr(t.sub)}</span></div>${t.disc?`<div class="row"><span>Discount</span><span>−${inr(t.disc)}</span></div>`:""}<div class="row tot"><span>Total</span><span>${inr(t.tot)}</span></div></div>
+ <button class="btn" onclick="go('cart','checkout')">Choose slot and pay</button></div>`}
+
+function applyCoupon(){const c=$("#cp").value.trim().toUpperCase();if(!COUPONS[c]){toast("Invalid code. Try SHARP10 or FIRST50");return}
+ if(c=="FIRST50"&&S.orders.length){toast("FIRST50 is for first booking only");return}S.coupon=c;render();toast("Coupon applied")}
+
+function checkout(){
+ if(!S.user)return `<div class="pad"><h2>Sign in to book</h2>${login()}</div>`;
+ const t=totals(),taken=takenSlots();
+ return `<div class="pad"><h2>Book your slot</h2>
+ <label class="mute">Barber</label><select onchange="S.barber=+this.value;S.slot='';render()">${BARBERS.map((b,i)=>`<option value="${i}" ${S.barber==i?"selected":""}>${b}</option>`).join("")}</select>
+ <label class="mute">Date</label><input type="date" min="${today()}" value="${S.date}" onchange="S.date=this.value;S.slot='';render()">
+ ${S.date?`<label class="mute">Time</label><div class="slots">${TIMES.map(x=>`<button class="slot ${S.slot==x?"on":""}" ${taken.includes(x)?"disabled":""} onclick="S.slot='${x}';render()">${x}</button>`).join("")}</div>`:`<p class="mute">Pick a date to see free times.</p>`}
+ <label class="mute">Payment</label><div class="pay">${["UPI","Card","Pay at shop"].map(p=>`<label><input type="radio" name="pay" ${S.pay==p?"checked":""} onchange="S.pay='${p}';render()"><span>${p}</span></label>`).join("")}</div>
+ ${S.pay=="UPI"?`<input id="upi" placeholder="UPI ID (e.g. name@upi)">`:""}${S.pay=="Card"?`<p class="mute">Card details are entered on the secure gateway page. This app never stores card numbers.</p>`:""}
+ ${(S.user.pts||0)>0?`<label class="mute" style="display:block;margin-bottom:10px"><input type="checkbox" style="width:auto;margin-right:8px" ${S.redeem?"checked":""} onchange="S.redeem=this.checked;render()">Use my ${S.user.pts} points (1 point = ₹1, up to 30% of the bill)</label>`:""}<div class="card">${t.red?`<div class="row"><span>Points used</span><span>−${inr(t.red)}</span></div>`:""}<div class="row"><span>Includes GST (18%)</span><span>${inr(Math.round(t.tot*18/118))}</span></div><div class="row tot"><span>Pay</span><span>${inr(t.tot)}</span></div><p class="mute" style="margin:6px 0 0">Free cancellation up to 2 hours before the slot. Refunds follow our policy under the Consumer Protection (E-Commerce) Rules 2020.</p></div>
+ <button class="btn" onclick="confirmOrder()">${S.pay=="Pay at shop"?"Confirm booking":"Pay "+inr(t.tot)+" and confirm"}</button></div>`}
+
+function confirmOrder(){
+ if(!S.date||!S.slot){toast("Choose a date and time");return}
+ if(S.pay=="UPI"&&!/^[\w.\-]+@[\w]+$/.test(($("#upi")||{}).value||"")){toast("Enter a valid UPI ID");return}
+ const t=totals();const id="SC"+String(Math.floor(1000+Math.random()*9000));
+ const o={id,items:Object.keys(S.cart).map(i=>({n:SERVICES.find(s=>s.id==i).n,q:S.cart[i]})),total:t.tot,date:S.date,slot:S.slot,barber:S.barber,pay:S.pay,status:"Confirmed",stage:0,rated:0,at:Date.now()};
+ S.orders.unshift(o);S.user.pts=(S.user.pts||0)-(t.red||0)+Math.floor(t.tot/10);S.last=o;S.cart={};S.coupon=null;S.slot="";S.redeem=false;save();toast("Booking confirmed");go("bookings","detail")}
+
+function login(){return `<div class="card"><input id="nm" placeholder="Your name"><input id="ph" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number">
+ <label class="mute"><input type="checkbox" id="cn" style="width:auto;margin-right:8px">I agree my name and number are used only for bookings (DPDP Act 2023).</label>
+ <button class="btn" style="margin-top:10px" onclick="doLogin()">Sign up / Log in</button></div>`}
+function doLogin(){const n=$("#nm").value.trim(),p=$("#ph").value.trim();
+ if(!n||!/^[6-9]\d{9}$/.test(p)){toast("Enter your name and a valid mobile number");return}
+ if(!$("#cn").checked){toast("Please accept the consent to continue");return}
+ S.user={name:n,phone:p,pts:S.user?S.user.pts:0,code:"SC"+n.slice(0,3).toUpperCase()+p.slice(-3)};save();render()}
+
+const STAGES=["Confirmed","Checked in","In service","Done"];
+function bookings(){
+ if(!S.user)return `<div class="pad"><h2>My bookings</h2><p class="mute">Sign in to see your bookings.</p>${login()}</div>`;
+ if(S.view=="detail"&&S.last){const o=S.last;return `<div class="pad"><h2>Booking ${o.id}</h2><div class="card"><b>${o.items.map(i=>i.n+" ×"+i.q).join(", ")}</b><p class="mute" style="margin:4px 0">${o.date} at ${o.slot} · ${BARBERS[o.barber]}<br>${o.pay} · ${inr(o.total)}</p>
+ <div class="steps">${STAGES.map((s,i)=>`<div class="${i<=o.stage?"d":""}">${s}</div>`).join("")}</div>
+ ${o.status=="Cancelled"?`<p style="color:var(--red)"><b>Cancelled</b></p>`:`<button class="btn alt sm" onclick="advance('${o.id}')">Simulate next status</button> <button class="btn alt sm" onclick="cancelOrder('${o.id}')">Cancel</button>`}</div>
+ ${o.stage==3&&!o.rated?`<div class="card"><b>How was your visit?</b><div class="stars">${[1,2,3,4,5].map(n=>`<button class="${S.rate>=n?"on":""}" onclick="S.rate=${n};render()">★</button>`).join("")}</div><textarea id="fb" rows="2" placeholder="Tell us more (optional)"></textarea><button class="btn" onclick="sendFeedback('${o.id}')">Send feedback</button></div>`:""}
+ <button class="btn alt" onclick="go('bookings')">Back to all bookings</button></div>`}
+ return `<div class="pad"><h2>My bookings</h2>${S.orders.length?S.orders.map(o=>`<div class="item" onclick="S.last=S.orders.find(x=>x.id=='${o.id}');go('bookings','detail')"><div class="t"><b>${o.id} · ${o.status=="Cancelled"?"Cancelled":STAGES[o.stage]}</b><span>${o.items.map(i=>i.n).join(", ")}<br>${o.date} · ${o.slot}</span></div><div><div class="price">${inr(o.total)}</div><button class="btn sm alt" onclick="event.stopPropagation();rebook('${o.id}')">Rebook</button></div></div>`).join(""):`<p class="mute">No bookings yet. Pick a service on Home to get started.</p>`}</div>`}
+function advance(id){const o=S.orders.find(x=>x.id==id);if(o.stage<3)o.stage++;save();render()}
+function cancelOrder(id){const o=S.orders.find(x=>x.id==id);o.status="Cancelled";S.user.pts=Math.max(0,S.user.pts-Math.floor(o.total/10));save();toast("Booking cancelled");render()}
+function rebook(id){const o=S.orders.find(x=>x.id==id);S.cart={};o.items.forEach(i=>{const s=SERVICES.find(x=>x.n==i.n);if(s)S.cart[s.id]=i.q});toast("Added to cart");go("cart")}
+function sendFeedback(id){if(!S.rate){toast("Tap a star rating first");return}const o=S.orders.find(x=>x.id==id);o.rated=S.rate;o.fb=($("#fb")||{}).value||"";S.rate=0;save();toast("Thanks for your feedback");render()}
+
+function profile(){
+ if(!S.user)return `<div class="pad"><h2>Profile</h2>${login()}</div>`;
+ const u=S.user,tier=u.pts>=200?"Gold":u.pts>=100?"Silver":"Bronze";
+ return `<div class="pad"><h2>Hi, ${u.name}</h2>
+ <div class="card"><div class="row"><span>Loyalty points</span><b>${u.pts||0}</b></div><div class="row"><span>Tier</span><b>${tier}</b></div><p class="mute" style="margin:4px 0 0">Earn 1 point per ₹10. 200 points = Gold.</p></div>
+ <div class="card"><b>Refer a friend</b><p class="mute" style="margin:4px 0 8px">Your code: <b>${u.code}</b></p><button class="btn sm" onclick="share()">Share on WhatsApp</button></div>
+ <div class="card"><b>Need help?</b><p class="mute" style="margin:4px 0 8px">Chat or call the shop.</p><a class="btn sm" style="display:inline-block;text-decoration:none;text-align:center" href="https://wa.me/${SHOP_PHONE}?text=Hi%20SharpCut">WhatsApp</a> <a class="btn sm alt" style="display:inline-block;text-decoration:none;text-align:center" href="tel:+${SHOP_PHONE}">Call</a></div>
+ <div class="card"><b>FAQ</b><p class="mute" style="margin:6px 0">Can I cancel? Yes, free up to 2 hours before. · Which payments work? UPI, card, or pay at shop. · Is my data safe? We only use your number for bookings.</p></div>
+ <button class="btn alt" onclick="go('profile','admin')">Owner view (sales summary)</button>
+ <p style="text-align:center"><a href="#" onclick="S.user=null;save();go('home');return false">Log out</a> · <a href="#" onclick="S.user=null;S.orders=[];S.cart={};S.coupon=null;save();toast('Your data has been deleted');go('home');return false">Delete my data</a></p></div>`}
+function share(){const m=encodeURIComponent("Book your haircut at SharpCut! Use my code "+S.user.code+" for a discount.");window.open("https://wa.me/?text="+m,"_blank")}
+
+function admin(){
+ const ok=S.orders.filter(o=>o.status!="Cancelled"),rev=ok.reduce((a,o)=>a+o.total,0);
+ const cnt={};ok.forEach(o=>o.items.forEach(i=>cnt[i.n]=(cnt[i.n]||0)+i.q));
+ const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]),mx=top.length?top[0][1]:1;
+ const rated=ok.filter(o=>o.rated),avg=rated.length?(rated.reduce((a,o)=>a+o.rated,0)/rated.length).toFixed(1):"–";
+ return `<div class="pad"><h2>Owner view</h2><div class="card"><div class="row"><span>Bookings</span><b>${ok.length}</b></div><div class="row"><span>Revenue</span><b>${inr(rev)}</b></div><div class="row"><span>Average rating</span><b>${avg}</b></div></div>
+ <div class="card"><b>Popular services</b>${top.length?top.map(([n,c])=>`<div style="margin-top:8px">${n} (${c})<div class="bar" style="width:${c/mx*100}%"></div></div>`).join(""):`<p class="mute">No bookings yet.</p>`}</div>
+ <div class="card"><b>Appointments</b>${S.orders.length?S.orders.map(o=>`<div class="row" style="align-items:center"><span>${o.id} · ${o.date.slice(5)} ${o.slot}<br><span class="mute">${o.status=="Cancelled"?"Cancelled":STAGES[o.stage]}</span></span>${o.status!="Cancelled"&&o.stage<3?`<button class="btn sm alt" onclick="advance('${o.id}')">Next status</button>`:""}</div>`).join(""):`<p class="mute">No appointments yet.</p>`}</div>
+ <button class="btn alt" onclick="go('profile')">Back to profile</button></div>`}
+
+function render(keep){
+ const v={home,cart:()=>S.view=="checkout"?checkout():cart(),bookings,profile:()=>S.view=="admin"?admin():profile()}[S.tab]();
+ $("#app").innerHTML=v;
+ const n=cartCount();
+ $("#nav").innerHTML=[["home","🏠","Home"],["cart","🛒","Cart"],["bookings","📅","Bookings"],["profile","👤","Profile"]].map(([k,i,l])=>`<button class="${S.tab==k?"on":""}" onclick="go('${k}')"><b>${i}</b>${l}${k=="cart"&&n?`<span class="badge">${n}</span>`:""}</button>`).join("");
+ if(keep){const q=$("#q");if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
+}
+load();render();
+</script></body></html>
